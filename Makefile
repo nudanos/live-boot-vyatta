@@ -15,5 +15,5 @@ all: ;
 install:
 	mkdir -p $(DESTDIR)/usr/share/initramfs-tools/hooks
 	install -m755 -t $(DESTDIR)/usr/share/initramfs-tools/hooks backend/initramfs-tools/hooks/*
-	mkdir -p $(DESTDIR)/lib/live/boot components
-	install -m755 -t $(DESTDIR)/lib/live/boot components/*
+	mkdir -p $(DESTDIR)/usr/lib/live/boot components
+	install -m755 -t $(DESTDIR)/usr/lib/live/boot components/*
