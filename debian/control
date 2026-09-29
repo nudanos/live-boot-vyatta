@@ -1,13 +1,16 @@
 Source: live-boot-vyatta
 Section: misc
 Priority: required
-Maintainer: Vyatta Package Maintainers <DL-vyatta-help@att.com>
-Build-Depends: debhelper (>= 9)
-Standards-Version: 3.9.8
+Maintainer: NuDanOS Maintainers <jon@fernandez.tech>
+Build-Depends: debhelper-compat (= 13)
+Standards-Version: 4.7.2
+Rules-Requires-Root: no
+Vcs-Git: https://github.com/nudanos/live-boot-vyatta.git
+Vcs-Browser: https://github.com/nudanos/live-boot-vyatta
 
 Package: live-boot-vyatta
 Architecture: all
-Depends:
+Depends: 
  ${misc:Depends}, syslinux-utils, live-boot
 Description: Live System Boot Components for Vyatta
  The Live Systems project maintains the components to build Debian based Live
