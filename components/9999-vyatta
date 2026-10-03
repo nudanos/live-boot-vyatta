@@ -61,9 +61,57 @@ Cmdline_vyatta ()
 		PERSISTENCE="Yes"
 		export LIVE_MEDIA_PATH PERSISTENCE_PATH PERSISTENCE_STORAGE \
 		    PERSISTENCE
+		VYATTA_UNION=yes
 		;;
 	esac
     done
 }
 
 Cmdline_vyatta
+
+# An installed image keeps its persistence directory (vyatta-union=) on the
+# partition that also holds its squashfs. live-boot blacklists the devices
+# hosting the live medium when it looks for persistence, so the image's
+# persistence was never found and every boot started from the default
+# configuration. For vyatta-union boots, allow the medium's device: live-boot's
+# mount_persistence_media moves the read-only medium mount and remounts it
+# read-write. Overrides live-boot's storage_devices (9990-misc-helpers.sh,
+# sourced before this component); otherwise identical.
+if [ -n "${VYATTA_UNION}" ]
+then
+	storage_devices()
+	{
+		black_listed_devices=""
+		_medium_dev="$(what_is_mounted_on /run/live/medium)"
+		for _d in ${1}
+		do
+			[ "${_d}" = "${_medium_dev}" ] && continue
+			black_listed_devices="${black_listed_devices} ${_d}"
+		done
+		white_listed_devices="${2}"
+
+		for sysblock in $(echo /sys/block/* | tr ' ' '\n' | grep -vE "loop|ram|fd")
+		do
+			fulldevname=$(sys2dev "${sysblock}")
+
+			if is_in_space_sep_list ${fulldevname} ${black_listed_devices} || \
+				[ -n "${white_listed_devices}" ] && \
+				! is_in_space_sep_list ${fulldevname} ${white_listed_devices}
+			then
+				continue
+			fi
+
+			for dev in $(subdevices "${sysblock}")
+			do
+				devname=$(sys2dev "${dev}")
+
+				if is_in_space_sep_list ${devname} ${black_listed_devices}
+				then
+					continue
+				else
+					echo "${devname}"
+				fi
+			done
+		done
+	}
+fi

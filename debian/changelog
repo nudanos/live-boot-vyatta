@@ -1,3 +1,12 @@
+live-boot-vyatta (0.12) trixie; urgency=medium
+
+  * vyatta-union boots: allow persistence on the device that holds the live
+    medium. Debian 13's live-boot blacklists it, so an installed image's
+    persistence (on the same partition as its squashfs) was never found and
+    every boot started from the default configuration.
+
+ -- NuDanOS Maintainers <jon@fernandez.tech>  Sat, 03 Oct 2026 16:19:36 -0700
+
 live-boot-vyatta (0.11) trixie; urgency=medium
 
   * Port to Debian 13 (trixie): debhelper-compat 13, Standards-Version 4.7.2, Rules-Requires-Root, NuDanOS Vcs.
